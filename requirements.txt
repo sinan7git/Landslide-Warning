@@ -1,0 +1,6 @@
+streamlit
+earthengine-api
+geemap
+requests
+pandas
+google-auth
