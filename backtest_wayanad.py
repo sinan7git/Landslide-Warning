@@ -5,7 +5,7 @@ import pandas as pd
 import datetime
 
 # --- CONFIGURATION FOR CHOORALMALA DISASTER ---
-PROJECT_ID = 'tokyo-mark-458613-p1'  # Keep your project ID
+PROJECT_ID = ''  # Keep your project ID
 LOCATION_NAME = "Chooralmala, Wayanad (HISTORY: July 30 2024)"
 LAT = 11.54
 LON = 76.13
