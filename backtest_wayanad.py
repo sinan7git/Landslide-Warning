@@ -18,17 +18,39 @@ START_DATE = "2024-07-20"
 # --- 1. AUTHENTICATE ---
 @st.cache_resource
 def initialize_earth_engine():
-    try:
-        ee.Initialize(project=PROJECT_ID)
-        return True
-    except:
+    if "EARTHENGINE_TOKEN" in st.secrets:
         try:
-            ee.Authenticate()
-            ee.Initialize(project=PROJECT_ID)
+            # We construct credentials from the secret token
+            import json
+            from google.oauth2.credentials import Credentials
+
+            # The secret is a JSON string, so we parse it
+            token_info = json.loads(st.secrets["EARTHENGINE_TOKEN"])
+            creds = Credentials(
+                None,
+                refresh_token=token_info['refresh_token'],
+                token_uri="https://oauth2.googleapis.com/token",
+                client_id="YOUR_CLIENT_ID_IF_ANY",  # Optional usually
+                client_secret="YOUR_CLIENT_SECRET_IF_ANY"  # Optional usually
+            )
+            ee.Initialize(credentials=creds, project=PROJECT_ID)
             return True
         except Exception as e:
-            st.error(f"Auth Failed: {e}")
+            st.error(f"Cloud Auth Failed: {e}")
             return False
+
+    else:
+        try:
+            ee.Initialize(project=PROJECT_ID)
+            return True
+        except:
+            try:
+                ee.Authenticate()
+                ee.Initialize(project=PROJECT_ID)
+                return True
+            except Exception as e:
+                st.error(f"Local Auth Failed: {e}")
+                return False
 
 
 # --- 2. FETCH HISTORICAL RAIN (Archive API) ---
